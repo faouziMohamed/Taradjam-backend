@@ -38,4 +38,8 @@
     <ItemGroup>
         <Folder Include="Services"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <Content Remove="efpt.config.json"/>
+    </ItemGroup>
 </Project>
