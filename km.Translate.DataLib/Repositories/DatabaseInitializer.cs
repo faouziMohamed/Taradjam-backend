@@ -12,6 +12,7 @@ namespace km.Translate.DataLib.Repositories;
 
 internal sealed class DatabaseInitializer : IDatabaseInitializer
 {
+  private readonly ApplicationDbContext _context;
   private readonly LanguageRepository _languageRepository;
   private readonly PropositionRepository _propositionRepository;
   private readonly RoleRepository _roleRepository;
@@ -23,6 +24,7 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
 
   public DatabaseInitializer(ApplicationDbContext context)
   {
+    _context = context;
     _seedDbSettings = GetFaultSettings();
     _sentenceRepository = new SentenceRepository(context);
     _languageRepository = new LanguageRepository(context);
@@ -40,6 +42,7 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
     try
     {
       await EmptyDatabaseAsync();
+      await _context.SaveChangesAsync();
       await InitializeLanguageTable();
       await InitializeRoleTableAsync();
       await InitializeUsersTablesAsync();
@@ -149,7 +152,7 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
   private static DbSeedDbSettings GetFaultSettings()
   {
     return new ConfigurationBuilder()
-      .AddJsonFile("dataSetting.json")
+      .AddJsonFile("dataSettings.json")
       .Build()
       .GetRequiredSection("DbSeedDbSettings")
       .Get<DbSeedDbSettings>();
