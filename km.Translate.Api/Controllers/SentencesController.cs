@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
 using km.Library.GenericDto;
-using km.Translate.Data.Data.ApiModels;
-using km.Translate.Data.Data.Models;
-using km.Translate.Data.Repositories.IRepositories;
+using km.Translate.DataLib.Data.Dto;
+using km.Translate.DataLib.Data.Models;
+using km.Translate.DataLib.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace km.Translate.Api.Controllers;

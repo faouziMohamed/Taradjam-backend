@@ -1,5 +1,5 @@
 using km.Library.Exceptions;
-using km.Translate.Data.Repositories.IRepositories;
+using km.Translate.DataLib.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace km.Translate.Api.Controllers;

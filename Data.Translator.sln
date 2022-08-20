@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "km.Library", "km.Library\km
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3FDA2225-11A6-4A40-90E6-498E97303C16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "km.Translate.Data", "km.Translate.Data\km.Translate.Data.csproj", "{32AD4674-036B-41E8-900C-20790639BED6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "km.Translate.DataLib", "km.Translate.DataLib\km.Translate.DataLib.csproj", "{32AD4674-036B-41E8-900C-20790639BED6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

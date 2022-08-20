@@ -1,6 +1,7 @@
-using km.Translate.Data.Data;
-using km.Translate.Data.Repositories;
-using km.Translate.Data.Repositories.IRepositories;
+using km.Translate.DataLib.Configs.Settings;
+using km.Translate.DataLib.Data;
+using km.Translate.DataLib.Repositories;
+using km.Translate.DataLib.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,12 +12,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var dbConSettings = DbConnectionSetting.GetConfig<DbConnectionSetting>("appsettings.json");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-  options.UseSqlServer(connectionString: builder.Configuration.GetValue<string>("Database:ConnectionString"),
+  options.UseSqlServer(dbConSettings.ConnectionString,
     b =>
     {
-      var maxRetries = builder.Configuration.GetValue<int>("Database:MaxRetryAttempts");
-      var retryDelay = builder.Configuration.GetValue<double>("Database:RetryDelay");
+      int maxRetries = dbConSettings.MaxRetryAttempts;
+      int retryDelay = dbConSettings.RetryDelay;
       maxRetries = maxRetries < 0 ? 0 : maxRetries;
       retryDelay = retryDelay < 0 ? 0 : retryDelay;
       b.EnableRetryOnFailure(maxRetries, maxRetryDelay: TimeSpan.FromSeconds(retryDelay), null);
