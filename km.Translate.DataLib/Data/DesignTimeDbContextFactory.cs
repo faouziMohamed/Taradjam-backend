@@ -1,3 +1,4 @@
+using km.Library.Utils;
 using km.Translate.DataLib.Configs.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -8,11 +9,9 @@ namespace km.Translate.DataLib.Data;
 
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
-
   public ApplicationDbContext CreateDbContext(string[] args)
   {
-    var configuration = DbConnectionSetting.GetConfig<DbConnectionSetting>("dataSettings.json");
-
+    var configuration = Utils.GetConfig<DbConnectionSetting>("dataSettings.json");
     var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
     builder.UseSqlServer(configuration.ConnectionString,
       b =>

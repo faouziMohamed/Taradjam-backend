@@ -19,11 +19,11 @@ public class SentencesController : BaseApiController
   {
     try
     {
-      int pageNumber = dto.PageNumber ?? 1;
+      int pageNumber = dto.PageNumber ?? 0;
       int pageSize = dto.PageSize ?? 10;
       bool shuffle = dto.Shuffle ?? false;
       string? lang = dto.Lang;
-      Expression<Func<Sentence, bool>> filter = s => s.SrcLanguage.LanguageShortName == lang;
+      Expression<Func<Sentence, bool>> filter = s => s.SrcLanguage.ShortName == lang;
 
       ResponseWithPageDto<SentenceDto> sentencesDto = lang switch
       {

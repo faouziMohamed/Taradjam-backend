@@ -6,7 +6,7 @@ namespace km.Library.Extensions;
 
 static public class EntityFrameworkExtensions
 {
-  static public IQueryable<TEntity> InnerJoins<TEntity>(this IQueryable<TEntity> queryable, params Expression<Func<TEntity, object>>[] predicates)
+  static public IQueryable<TEntity> SqlJoins<TEntity>(this IQueryable<TEntity> queryable, params Expression<Func<TEntity, object>>[] predicates)
     where TEntity : class
   {
     IQueryable<TEntity> query = predicates

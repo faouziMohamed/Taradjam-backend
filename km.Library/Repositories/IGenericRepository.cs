@@ -20,7 +20,7 @@ public interface IGenericRepository<TEntity> where TEntity : BaseEntity
   public Task<TEntity?> GetByIdAsync(int id);
   public Task<IEnumerable<TEntity>> GetAllAsync();
 
-  public Task<Task<ResponseWithPageDto<TEntity>>> GetManyAsync(Expression<Func<TEntity, object>> orderByPredicate,
+  public Task<ResponseWithPageDto<TEntity>> GetManyAsync(Expression<Func<TEntity, object>> orderByPredicate,
     Expression<Func<TEntity, bool>>? filterPredicate,
     int pageNumber, int pageSize = 10, bool shuffle = false);
 

@@ -21,7 +21,8 @@ public sealed class SentenceRepository : GenericRepository<Sentence, Application
   public async Task<Sentence?> GetOneByIdAsync(int id)
   {
     Expression<Func<Sentence, object>>[] innerJoins = GetInnerJoinsExpressions();
-    return await GetOneAsync(s => s.Id == id, innerJoins);
+    var sentence = await GetOneAsync(s => s.Id == id, innerJoins);
+    return sentence;
   }
 
   public async Task<ResponseWithPageDto<SentenceDto>> GetManyByPage(
@@ -51,8 +52,7 @@ public sealed class SentenceRepository : GenericRepository<Sentence, Application
   {
     var joins = new Expression<Func<Sentence, object>>[]
     {
-      static s => s.SrcLanguage,
-      static s => s.Propositions
+      static s => s.SrcLanguage
     };
 
     return joins;

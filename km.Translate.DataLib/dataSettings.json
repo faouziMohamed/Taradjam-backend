@@ -23,6 +23,27 @@
         "Description": "Basic Role, can Add, Edit, Approve, and Delete Translations;"
       }
     ],
-    "DefaultRoleId": 1
+    "LangSettings": [
+      {
+        "Id": 1,
+        "Name": "Français",
+        "ShortName": "fr",
+        "LongName": "French"
+      },
+      {
+        "Id": 2,
+        "Name": "English",
+        "ShortName": "en",
+        "LongName": "English"
+      },
+      {
+        "Id": 3,
+        "Name": "Shi Komori",
+        "ShortName": "km",
+        "LongName": "Comorian"
+      }
+    ],
+    "DefaultRoleId": 1,
+    "DefaultLangId": 1
   }
 }

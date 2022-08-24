@@ -14,16 +14,16 @@ public record SentenceDto
   {
     TextId = sentence.Id;
     SentenceVo = sentence.SentenceVo;
-    SrcLanguageDto = new LanguageDto
+    SrcLanguage = new LanguageDto
     {
       LangId = sentence.SrcLanguage.Id,
-      LangName = sentence.SrcLanguage.LanguageName,
-      LangShortName = sentence.SrcLanguage.LanguageShortName
+      LangName = sentence.SrcLanguage.LongName,
+      LangShortName = sentence.SrcLanguage.ShortName
     };
   }
   public int TextId { get; init; }
   public string SentenceVo { get; init; } = string.Empty;
-  public LanguageDto SrcLanguageDto { get; init; } = null!;
+  public LanguageDto SrcLanguage { get; init; } = null!;
 
   static public SentenceDto From(Sentence sentence)
   {

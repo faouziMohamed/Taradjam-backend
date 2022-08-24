@@ -2,6 +2,8 @@
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
+// ReSharper disable ClassNeverInstantiated.Global
+
 namespace km.Translate.DataLib.Configs.Settings;
 
 public sealed class DbSeedDbSettings
@@ -14,6 +16,15 @@ public sealed class DbSeedDbSettings
   public string DefaultPassword { get; init; } = null!;
   public int DefaultRoleId { get; init; }
   public RoleSettings[] RoleSettings { get; init; } = null!;
+  public LangSettings[] LangSettings { get; init; } = null!;
+}
+
+public class LangSettings
+{
+  public int Id { get; init; }
+  public string Name { get; init; } = null!;
+  public string ShortName { get; init; } = null!;
+  public string LongName { get; init; } = null!;
 }
 
 public sealed class RoleSettings

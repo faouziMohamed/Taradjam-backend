@@ -100,7 +100,7 @@ public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
   )
   {
     var row = await _context.Set<TEntity>()
-      .InnerJoins(joinsPredicates)
+      .SqlJoins(joinsPredicates)
       .FirstOrDefaultAsync(filterPredicate);
 
     return row;
@@ -111,21 +111,21 @@ public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
     return await _context.Set<TEntity>().SingleOrDefaultAsync(e => e.Id == id);
   }
 
-  public async Task<Task<ResponseWithPageDto<TEntity>>> GetManyAsync(Expression<Func<TEntity, object>> orderByPredicate,
+  public async Task<ResponseWithPageDto<TEntity>> GetManyAsync(Expression<Func<TEntity, object>> orderByPredicate,
     Expression<Func<TEntity, bool>>? filterPredicate,
-    int pageNumber, int pageSize = 10, bool shuffle = false)
+    int pageNumber, int pageSize, bool shuffle = false)
   {
     IQueryable<TEntity> result = GetManyWithFilter(orderByPredicate, filterPredicate, pageNumber, pageSize, shuffle);
-    return CreateResponseWithPageInfoDto(data: await result.ToListAsync(), pageNumber, pageSize);
+    return await CreateResponseWithPageInfoDto(data: await result.ToListAsync(), pageNumber, pageSize);
   }
 
   public async Task<ResponseWithPageDto<TEntity>> GetManyAsync(Expression<Func<TEntity, object>> orderByPredicate,
     Expression<Func<TEntity, bool>> filterPredicate,
-    int pageNumber, int pageSize = 10, bool shuffle = false,
+    int pageNumber, int pageSize, bool shuffle = false,
     params Expression<Func<TEntity, object>>[] includePredicates)
   {
     IQueryable<TEntity> rows = GetManyWithFilter(orderByPredicate, filterPredicate, pageNumber, pageSize, shuffle);
-    List<TEntity> result = await rows.InnerJoins(includePredicates).ToListAsync();
+    List<TEntity> result = await rows.SqlJoins(includePredicates).ToListAsync();
     return await CreateResponseWithPageInfoDto(result, pageNumber, pageSize);
   }
   public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
@@ -135,9 +135,9 @@ public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
 
   private IQueryable<TEntity> GetManyWithFilter(Expression<Func<TEntity, object>> orderByPredicate,
     Expression<Func<TEntity, bool>>? filterPredicate,
-    int pageNumber = 1, int pageSize = 10, bool shuffle = false)
+    int pageNumber = 0, int pageSize = 10, bool shuffle = false)
   {
-    int skip = (pageNumber - 1)*pageSize;
+    int skip = pageNumber*(pageSize > 0 ? pageSize : 0);
     filterPredicate ??= static x => true;
     IQueryable<TEntity> rows = shuffle
       ? _context.Set<TEntity>().Where(filterPredicate).OrderBy(static x => Guid.NewGuid())

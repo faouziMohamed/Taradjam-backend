@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace km.Translate.Api.Controllers;
 
-public class TranslationsController : BaseApiController
+public class ProposedController : BaseApiController
 {
-  public TranslationsController(IUnitOfWork unitOfWork) : base(unitOfWork)
+  public ProposedController(IUnitOfWork unitOfWork) : base(unitOfWork)
   {
   }
-
-  [HttpGet("new")]
+  [Produces("application/json")]
+  [HttpGet("translations/{sentenceId:int}")]
   public async Task<ActionResult<TranslationsDto>> GetProposedTranslations(int sentenceId)
   {
     try
@@ -32,12 +32,15 @@ public class TranslationsController : BaseApiController
       throw;
     }
   }
-
-  [HttpPost]
+  [Produces("application/json")]
+  [HttpPost("/api/propose/new/translation")]
   public async Task<ActionResult<CreatedPropositionDto>> PostNewTranslation([FromBody] NewPropositionDto propositionDto)
   {
     try
     {
+      // check if sentence exists and is the proposed translation is not already proposed
+      await _unitOfWork.Propositions.MakeSureSentenceExistsOrThrow(propositionDto);
+      await _unitOfWork.Propositions.MakeSureTranslationDoesNotExistOrThrow(propositionDto);
       var newProposition = await _unitOfWork.Propositions.AddNewProposition(propositionDto);
       await _unitOfWork.CompleteAsync();
       return newProposition;

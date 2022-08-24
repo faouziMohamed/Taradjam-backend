@@ -1,8 +1,12 @@
+using System.Reflection;
+using km.Library.Utils;
+using km.Translate.Api.Configs;
 using km.Translate.DataLib.Configs.Settings;
 using km.Translate.DataLib.Data;
 using km.Translate.DataLib.Repositories;
 using km.Translate.DataLib.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +14,52 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var serverDoc = Utils.GetConfig<ServerDocSettings>();
+builder.Services.AddSwaggerGen(options =>
+  {
+    options.SwaggerDoc(
+      serverDoc.Version,
+      info: new OpenApiInfo
+      {
+        Title = serverDoc.Title,
+        Version = serverDoc.Version,
+        Description = serverDoc.Description,
+        Contact = new OpenApiContact
+        {
+          Name = serverDoc.Contact.Name,
+          Email = serverDoc.Contact.Email,
+          Url = new Uri(serverDoc.Contact.Url)
+        },
+        License = new OpenApiLicense
+        {
+          Name = serverDoc.License.Name,
+          Url = new Uri(serverDoc.License.Url)
+        }
+      }
+    );
 
-var dbConSettings = DbConnectionSetting.GetConfig<DbConnectionSetting>("appsettings.json");
+    var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
+  }
+);
+
+var serverSettings = Utils.GetConfig<ServerSettings>();
+builder.Services.AddCors(options =>
+  {
+    options.AddPolicy(
+      serverSettings.CorsPolicyName,
+      policy =>
+      {
+        policy
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .WithOrigins(serverSettings.AllowedOrigins);
+      }
+    );
+  }
+);
+
+var dbConSettings = Utils.GetConfig<DbConnectionSetting>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
   options.UseSqlServer(dbConSettings.ConnectionString,
     b =>
@@ -26,16 +73,21 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
   )
 );
 
-
-#region Repositories
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-#endregion
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(
+  options =>
+  {
+    options.DocumentTitle = serverDoc.Title;
+    options.SwaggerEndpoint(url: $"/swagger/{serverDoc.Version}/swagger.json", serverDoc.Title);
+    options.RoutePrefix = string.Empty;
+  }
+);
+
+app.UseCors(serverSettings.CorsPolicyName);
 
 app.UseHttpsRedirection();
 

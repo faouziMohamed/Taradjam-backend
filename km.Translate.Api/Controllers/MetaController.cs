@@ -9,6 +9,9 @@ public class MetaController : BaseApiController
   public MetaController(IUnitOfWork unitOfWork) : base(unitOfWork)
   {
   }
+  /// <summary>
+  ///   Give some information about the server
+  /// </summary>
   [HttpGet("/info")]
   public ActionResult<string> Info()
   {

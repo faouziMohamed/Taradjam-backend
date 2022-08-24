@@ -141,12 +141,15 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
 
   private async Task InitializeLanguageTable()
   {
-    await _languageRepository.AddAsync(new Language
+    IEnumerable<Language> langs = _seedDbSettings.LangSettings.Select(static l => new Language
       {
-        LanguageName = _seedDbSettings.LocaleLong,
-        LanguageShortName = _seedDbSettings.LocaleShort
+        Name = l.Name,
+        LongName = l.LongName,
+        ShortName = l.ShortName
       }
     );
+
+    await _languageRepository.AddRangeAsync(langs);
   }
 
   private static DbSeedDbSettings GetFaultSettings()

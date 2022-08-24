@@ -5,13 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace km.Translate.DataLib.Data.Models;
 
-[Index(nameof(LanguageName), nameof(LanguageShortName), IsUnique = true)]
+[Index(nameof(Name), IsUnique = true)]
+[Index(nameof(LongName), IsUnique = true)]
+[Index(nameof(ShortName), IsUnique = true)]
 public sealed class Language : BaseEntity
 {
   [Required]
-  [StringLength(20)]
-  public string LanguageName { get; set; }
+  [StringLength(30)]
+  public string Name { get; set; }
 
+  [Required]
+  [StringLength(20)]
+  public string LongName { get; set; }
+
+  [Required]
   [StringLength(10)]
-  public string LanguageShortName { get; set; }
+  public string ShortName { get; set; }
 }
