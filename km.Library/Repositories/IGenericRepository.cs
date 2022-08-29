@@ -15,7 +15,7 @@ public interface IGenericRepository<TEntity> where TEntity : BaseEntity
   public Task<int> CountAsync();
   public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
 
-  public Expression<Func<TEntity, object>>[] GetInnerJoinsExpressions();
+  public Expression<Func<TEntity, object>>[] GetPropertiesToJoinsExpressions();
 
   public Task<TEntity?> GetByIdAsync(int id);
   public Task<IEnumerable<TEntity>> GetAllAsync();

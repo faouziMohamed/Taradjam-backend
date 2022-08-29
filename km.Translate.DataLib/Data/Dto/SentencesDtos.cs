@@ -8,20 +8,20 @@ using km.Translate.DataLib.Data.Models;
 
 namespace km.Translate.DataLib.Data.Dto;
 
-public record SentenceDto
+public sealed record SentenceDto
 {
   private SentenceDto(Sentence sentence)
   {
-    TextId = sentence.Id;
+    SentenceVoId = sentence.Id;
     SentenceVo = sentence.SentenceVo;
     SrcLanguage = new LanguageDto
     {
-      LangId = sentence.SrcLanguage.Id,
-      LangName = sentence.SrcLanguage.LongName,
-      LangShortName = sentence.SrcLanguage.ShortName
+      LangId = sentence.LanguageVo.Id,
+      LangName = sentence.LanguageVo.LongName,
+      LangShortName = sentence.LanguageVo.ShortName
     };
   }
-  public int TextId { get; init; }
+  public int SentenceVoId { get; init; }
   public string SentenceVo { get; init; } = string.Empty;
   public LanguageDto SrcLanguage { get; init; } = null!;
 

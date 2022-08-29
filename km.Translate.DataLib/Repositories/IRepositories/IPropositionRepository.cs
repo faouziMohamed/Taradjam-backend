@@ -9,8 +9,14 @@ public interface IPropositionRepository : IGenericRepository<Proposition>
   public Task<TranslationsDto> GetProposedTranslations(int sentenceId);
   public TranslationsDto GetProposedTranslations(Sentence sentence);
   public Task<PropositionsDto> GetOneByIdAsync(int id);
-  public Task<bool> IsPropositionExists(NewPropositionDto proposition);
-  public Task MakeSureTranslationDoesNotExistOrThrow(NewPropositionDto translationsDto);
-  public Task MakeSureSentenceExistsOrThrow(NewPropositionDto proposition);
-  public Task<CreatedPropositionDto> AddNewProposition(NewPropositionDto proposition);
+  public Task<long> DoAnUpVote(int propositionId);
+  public Task<long> DoADownVote(int propositionId);
+  public Task<long> DoAVote(int propositionId, bool isUpVote);
+
+  public Task<bool> IsPropositionExists(AbstractBasePropositionDtoWithoutId proposition);
+  public Task MakeSureTranslationDoesNotExistOrThrow(AbstractBasePropositionDtoWithoutId translationsDto);
+  public Task MakeSureSentenceExistsOrThrow(int sentenceId);
+  public Task MakeSurePropositionExistOrThrow(int propositionDto);
+  public Task<PropositionsDto> AddNewProposition(PostNewPropositionDto proposition);
+  public Task<PropositionsDto> UpdateProposition(PutPropositionDto proposition);
 }

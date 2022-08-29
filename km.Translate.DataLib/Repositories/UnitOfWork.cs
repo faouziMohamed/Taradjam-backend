@@ -15,7 +15,6 @@ public sealed class UnitOfWork : IUnitOfWork
     UserDetails = new UserDetailsRepository(_context);
     Users = new UserRepository(_context);
     Roles = new RoleRepository(_context);
-    Votes = new VoteRepository(_context);
     DatabaseInitializer = new DatabaseInitializer(_context);
   }
 
@@ -25,7 +24,6 @@ public sealed class UnitOfWork : IUnitOfWork
   public IUserDetailsRepository UserDetails { get; }
   public IUserRepository Users { get; }
   public IRoleRepository Roles { get; }
-  public IVoteRepository Votes { get; }
   public IDatabaseInitializer DatabaseInitializer { get; }
 
   public async Task<int> CompleteAsync()

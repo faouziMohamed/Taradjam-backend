@@ -7,7 +7,6 @@ public interface IUnitOfWork : IDisposable
   public IUserDetailsRepository UserDetails { get; }
   public IUserRepository Users { get; }
   public IRoleRepository Roles { get; }
-  public IVoteRepository Votes { get; }
   public IDatabaseInitializer DatabaseInitializer { get; }
   public Task<int> CompleteAsync();
 }

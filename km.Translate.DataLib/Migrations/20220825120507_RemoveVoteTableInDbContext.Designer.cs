@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using km.Translate.DataLib.Data;
 
 #nullable disable
 
-namespace km.Translate.DataLib.Data.Migrations
+namespace km.Translate.DataLib.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220825120507_RemoveVoteTableInDbContext")]
+    partial class RemoveVoteTableInDbContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,13 +75,13 @@ namespace km.Translate.DataLib.Data.Migrations
                     b.Property<int?>("ApprovedById")
                         .HasColumnType("int");
 
+                    b.Property<long>("DownVotes")
+                        .HasColumnType("bigint");
+
                     b.Property<int?>("SentenceId")
                         .HasColumnType("int");
 
                     b.Property<int>("SentenceVoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TargetLanguageId")
                         .HasColumnType("int");
 
                     b.Property<string>("TranslatedBy")
@@ -96,8 +98,11 @@ namespace km.Translate.DataLib.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("VotesId")
+                    b.Property<int>("TranslationLangId")
                         .HasColumnType("int");
+
+                    b.Property<long>("UpVotes")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -105,12 +110,10 @@ namespace km.Translate.DataLib.Data.Migrations
 
                     b.HasIndex("SentenceId");
 
-                    b.HasIndex("TargetLanguageId");
-
                     b.HasIndex("TranslationHash")
                         .IsUnique();
 
-                    b.HasIndex("VotesId");
+                    b.HasIndex("TranslationLangId");
 
                     b.ToTable("Propositions");
                 });
@@ -146,16 +149,16 @@ namespace km.Translate.DataLib.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("LanguageVoId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SentenceVo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SrcLanguageId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("SrcLanguageId");
+                    b.HasIndex("LanguageVoId");
 
                     b.ToTable("Sentences");
                 });
@@ -222,25 +225,6 @@ namespace km.Translate.DataLib.Data.Migrations
                     b.ToTable("UserDetails");
                 });
 
-            modelBuilder.Entity("km.Translate.DataLib.Data.Models.Vote", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<long>("DownVotes")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UpVotes")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Votes");
-                });
-
             modelBuilder.Entity("km.Translate.DataLib.Data.Models.Proposition", b =>
                 {
                     b.HasOne("km.Translate.DataLib.Data.Models.User", "ApprovedBy")
@@ -251,32 +235,26 @@ namespace km.Translate.DataLib.Data.Migrations
                         .WithMany("Propositions")
                         .HasForeignKey("SentenceId");
 
-                    b.HasOne("km.Translate.DataLib.Data.Models.Language", "TargetLanguage")
+                    b.HasOne("km.Translate.DataLib.Data.Models.Language", "TranslationLang")
                         .WithMany()
-                        .HasForeignKey("TargetLanguageId")
+                        .HasForeignKey("TranslationLangId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("km.Translate.DataLib.Data.Models.Vote", "Votes")
-                        .WithMany()
-                        .HasForeignKey("VotesId");
-
                     b.Navigation("ApprovedBy");
 
-                    b.Navigation("TargetLanguage");
-
-                    b.Navigation("Votes");
+                    b.Navigation("TranslationLang");
                 });
 
             modelBuilder.Entity("km.Translate.DataLib.Data.Models.Sentence", b =>
                 {
-                    b.HasOne("km.Translate.DataLib.Data.Models.Language", "SrcLanguage")
+                    b.HasOne("km.Translate.DataLib.Data.Models.Language", "LanguageVo")
                         .WithMany()
-                        .HasForeignKey("SrcLanguageId")
+                        .HasForeignKey("LanguageVoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("SrcLanguage");
+                    b.Navigation("LanguageVo");
                 });
 
             modelBuilder.Entity("km.Translate.DataLib.Data.Models.User", b =>

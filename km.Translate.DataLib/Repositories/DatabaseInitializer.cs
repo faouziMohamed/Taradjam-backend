@@ -20,7 +20,6 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
   private readonly SentenceRepository _sentenceRepository;
   private readonly UserDetailsRepository _userDetailsRepository;
   private readonly UserRepository _userRepository;
-  private readonly VoteRepository _voteRepository;
 
   public DatabaseInitializer(ApplicationDbContext context)
   {
@@ -32,7 +31,6 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
     _userRepository = new UserRepository(context);
     _roleRepository = new RoleRepository(context);
     _propositionRepository = new PropositionRepository(context);
-    _voteRepository = new VoteRepository(context);
   }
 
   private static string BinPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
@@ -60,7 +58,6 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
   {
     // Delete all rows in all tables then truncate the tables
     await _languageRepository.ClearAndResetIdentity();
-    await _voteRepository.ClearAndResetIdentity();
     await _roleRepository.ClearAndResetIdentity();
     await _userDetailsRepository.ClearAndResetIdentity();
     await _userRepository.ClearAndResetIdentity();
@@ -106,6 +103,7 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
       }
     );
 
+    await _context.SaveChangesAsync();
     await _userRepository.AddAsync(new User { UserDetailsId = 1, RoleId = role });
   }
   private async Task InitializeRoleTableAsync()
@@ -132,7 +130,7 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
   // ReSharper disable once UnusedMethodReturnValue.Local
   private async Task<IEnumerable<Sentence>> CreateSentencesList(IEnumerable<CsvDataModel> csvRecords)
   {
-    IEnumerable<Sentence> sentences = csvRecords.Select(static record => new Sentence { SentenceVo = record.Sentence, SrcLanguageId = 1 })
+    IEnumerable<Sentence> sentences = csvRecords.Select(static record => new Sentence { SentenceVo = record.Sentence, LanguageVoId = 1 })
       .ToList();
 
     await _sentenceRepository.AddRangeAsync(sentences);

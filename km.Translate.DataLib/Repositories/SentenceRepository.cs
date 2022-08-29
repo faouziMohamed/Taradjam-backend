@@ -20,7 +20,7 @@ public sealed class SentenceRepository : GenericRepository<Sentence, Application
 
   public async Task<Sentence?> GetOneByIdAsync(int id)
   {
-    Expression<Func<Sentence, object>>[] innerJoins = GetInnerJoinsExpressions();
+    Expression<Func<Sentence, object>>[] innerJoins = GetPropertiesToJoinsExpressions();
     var sentence = await GetOneAsync(s => s.Id == id, innerJoins);
     return sentence;
   }
@@ -31,7 +31,7 @@ public sealed class SentenceRepository : GenericRepository<Sentence, Application
     bool shuffle = false,
     Expression<Func<Sentence, bool>>? filterPredicate = null)
   {
-    Expression<Func<Sentence, object>>[] innerJoins = GetInnerJoinsExpressions();
+    Expression<Func<Sentence, object>>[] innerJoins = GetPropertiesToJoinsExpressions();
     ResponseWithPageDto<Sentence> response = await GetManyAsync(static s => s.Id,
       filterPredicate: filterPredicate!,
       pageNumber,
@@ -48,11 +48,11 @@ public sealed class SentenceRepository : GenericRepository<Sentence, Application
     return response.Map(static s => SentenceDto.From(s));
   }
 
-  public override Expression<Func<Sentence, object>>[] GetInnerJoinsExpressions()
+  public override Expression<Func<Sentence, object>>[] GetPropertiesToJoinsExpressions()
   {
     var joins = new Expression<Func<Sentence, object>>[]
     {
-      static s => s.SrcLanguage
+      static s => s.LanguageVo
     };
 
     return joins;

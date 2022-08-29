@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace km.Translate.DataLib.Data.Migrations
+namespace km.Translate.DataLib.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class RemoveVoteTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -74,15 +74,15 @@ namespace km.Translate.DataLib.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SrcLanguageId = table.Column<int>(type: "int", nullable: false),
+                    LanguageVoId = table.Column<int>(type: "int", nullable: false),
                     SentenceVo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sentences", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sentences_Languages_SrcLanguageId",
-                        column: x => x.SrcLanguageId,
+                        name: "FK_Sentences_Languages_LanguageVoId",
+                        column: x => x.LanguageVoId,
                         principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -122,22 +122,23 @@ namespace km.Translate.DataLib.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SentenceVoId = table.Column<int>(type: "int", nullable: false),
-                    TargetLanguageId = table.Column<int>(type: "int", nullable: false),
+                    TranslationLangId = table.Column<int>(type: "int", nullable: false),
                     ApprovedById = table.Column<int>(type: "int", nullable: true),
-                    VotesId = table.Column<int>(type: "int", nullable: true),
                     TranslatedText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TranslationHash = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AcceptationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TranslationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TranslatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpVotes = table.Column<long>(type: "bigint", nullable: false),
+                    DownVotes = table.Column<long>(type: "bigint", nullable: false),
                     SentenceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Propositions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Propositions_Languages_TargetLanguageId",
-                        column: x => x.TargetLanguageId,
+                        name: "FK_Propositions_Languages_TranslationLangId",
+                        column: x => x.TranslationLangId,
                         principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -150,11 +151,6 @@ namespace km.Translate.DataLib.Data.Migrations
                         name: "FK_Propositions_Users_ApprovedById",
                         column: x => x.ApprovedById,
                         principalTable: "Users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Propositions_Votes_VotesId",
-                        column: x => x.VotesId,
-                        principalTable: "Votes",
                         principalColumn: "Id");
                 });
 
@@ -187,20 +183,15 @@ namespace km.Translate.DataLib.Data.Migrations
                 column: "SentenceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Propositions_TargetLanguageId",
-                table: "Propositions",
-                column: "TargetLanguageId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Propositions_TranslationHash",
                 table: "Propositions",
                 column: "TranslationHash",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Propositions_VotesId",
+                name: "IX_Propositions_TranslationLangId",
                 table: "Propositions",
-                column: "VotesId");
+                column: "TranslationLangId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_RoleName",
@@ -210,9 +201,9 @@ namespace km.Translate.DataLib.Data.Migrations
                 filter: "[RoleName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sentences_SrcLanguageId",
+                name: "IX_Sentences_LanguageVoId",
                 table: "Sentences",
-                column: "SrcLanguageId");
+                column: "LanguageVoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserDetails_Email",
@@ -243,13 +234,13 @@ namespace km.Translate.DataLib.Data.Migrations
                 name: "Propositions");
 
             migrationBuilder.DropTable(
+                name: "Votes");
+
+            migrationBuilder.DropTable(
                 name: "Sentences");
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Votes");
 
             migrationBuilder.DropTable(
                 name: "Languages");

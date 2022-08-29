@@ -7,14 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace km.Translate.Api.Controllers;
 
+/**
+ * <summary>Manage original sentences with CRUD operations</summary>
+ */
 public class SentencesController : BaseApiController
 {
   // public record TranslationsDto : ResponseWithPageDto<Sentence>;
   public SentencesController(IUnitOfWork unitOfWork) : base(unitOfWork)
   {
   }
-
+  /**
+ * <summary>Get all sentences</summary>
+ */
   [HttpGet]
+  [Produces("application/json")]
   public async Task<ActionResult> GetSentences([FromQuery] RequestWithLocalDto dto)
   {
     try
@@ -23,7 +29,7 @@ public class SentencesController : BaseApiController
       int pageSize = dto.PageSize ?? 10;
       bool shuffle = dto.Shuffle ?? false;
       string? lang = dto.Lang;
-      Expression<Func<Sentence, bool>> filter = s => s.SrcLanguage.ShortName == lang;
+      Expression<Func<Sentence, bool>> filter = s => s.LanguageVo.ShortName == lang;
 
       ResponseWithPageDto<SentenceDto> sentencesDto = lang switch
       {
@@ -40,6 +46,9 @@ public class SentencesController : BaseApiController
     }
   }
 
+  /**
+   * <summary>Get a specific sentence by providing its id</summary>
+   */
   [HttpGet("{id:int}")]
   public async Task<ActionResult<SentenceDto>> GetSentence(int id)
   {

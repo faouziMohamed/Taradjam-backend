@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace km.Translate.DataLib.Data.Models;
 
 [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
-[Index(nameof(TranslationHash), IsUnique = true)]
+[Index(nameof(TranslationHash), nameof(SentenceVoId), nameof(TranslationLangId), IsUnique = true)]
 public sealed class Proposition : BaseEntity
 {
   [JsonIgnore]
@@ -22,13 +22,10 @@ public sealed class Proposition : BaseEntity
 
   [JsonIgnore]
   [Required]
-  public int TargetLanguageId { get; set; }
+  public int TranslationLangId { get; set; }
 
   [JsonIgnore]
   public int? ApprovedById { get; set; }
-
-  [JsonIgnore]
-  public int? VotesId { get; set; }
 
 
   [Required]
@@ -43,10 +40,12 @@ public sealed class Proposition : BaseEntity
   public DateTime TranslationDate { get; set; }
 
   public string TranslatedBy { get; set; } = "Anonyme";
-  public Language TargetLanguage { get; set; }
+
+  [ForeignKey("TranslationLangId")]
+  public Language TranslationLang { get; set; }
 
   [ForeignKey("ApprovedById")]
   public User ApprovedBy { get; set; }
 
-  public Vote Votes { get; set; }
+  public long Votes { get; set; } = 0;
 }

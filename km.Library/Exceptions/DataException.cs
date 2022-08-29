@@ -67,3 +67,10 @@ public class InvalidOperationException : DataException
   {
   }
 }
+
+public sealed class InvalidTargetException : DataException
+{
+  public InvalidTargetException(string message, string? title = "Invalid Target Exception", string? hint = "") : base(message, title, hint)
+  {
+  }
+}

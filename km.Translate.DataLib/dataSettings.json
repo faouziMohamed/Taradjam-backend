@@ -21,6 +21,11 @@
         "Id": 2,
         "Name": "Basic",
         "Description": "Basic Role, can Add, Edit, Approve, and Delete Translations;"
+      },
+      {
+        "Id": 3,
+        "Name": "Developer",
+        "Description": "Developer Role, can do everything, programmatically or manually with more power"
       }
     ],
     "LangSettings": [

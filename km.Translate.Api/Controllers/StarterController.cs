@@ -4,14 +4,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace km.Translate.Api.Controllers;
 
+/**
+ * <summary>Provide endpoints to control the creation, reinitialization of the database or credentials</summary>
+ */
 public class StarterController : BaseApiController
 {
   public StarterController(IUnitOfWork unitOfWork) : base(unitOfWork)
   {
 
   }
+  /**
+   * <summary>Create the database or recreate it if it already created</summary>
+   * <param name="force">
+   *   Set this query to true to recreate the database. This will delete all data in the database and recreate it with seed
+   *   data. <br />
+   *   Set this query to false to create the database. This will create the database if it does not
+   *   already exist.
+   *   If set to true it will require to pass an api token <see cref="token" />
+   * </param>
+   * <param name="token">Credential Token required to recreate the database</param>
+   * <returns>The result an acknowledge message of the operation</returns>
+   */
   [HttpGet("initialize")]
-  public async Task<IActionResult> Initialize(bool force = false)
+  public async Task<IActionResult> Initialize(bool force = false, string token = "")
   {
     try
     {

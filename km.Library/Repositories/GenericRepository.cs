@@ -18,7 +18,7 @@ public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
     _context = context;
   }
 
-  virtual public Expression<Func<TEntity, object>>[] GetInnerJoinsExpressions()
+  virtual public Expression<Func<TEntity, object>>[] GetPropertiesToJoinsExpressions()
   {
     throw new NotImplementedException();
   }
