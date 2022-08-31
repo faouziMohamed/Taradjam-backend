@@ -25,9 +25,7 @@ jobs:
       - name: Build with dotnet
         run:
             |
-            cd
-            cd km.Translate.Api
-            cd
+            pwd
             dotnet build --configuration Release
 
       - name: dotnet publish
