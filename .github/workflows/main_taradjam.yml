@@ -25,7 +25,7 @@ jobs:
       - name: Build with dotnet
         run:
             |
-            pwd
+            pwd ; ls | select Name
             dotnet build --configuration Release
 
       - name: dotnet publish
