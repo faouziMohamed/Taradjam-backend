@@ -11,7 +11,8 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<Applicatio
 {
   public ApplicationDbContext CreateDbContext(string[] args)
   {
-    var configuration = Utils.GetConfig<DbConnectionSetting>("dataSettings.json");
+    bool isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+    var configuration = Utils.GetConfig<DbConnectionSetting>(isDevelopment, "dataSettings.json");
     var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
     builder.UseSqlServer(configuration.ConnectionString,
       b =>

@@ -2,7 +2,7 @@
   "DbConnectionSetting": {
     "MaxRetryAttempts": 10,
     "RetryDelay": 10,
-    "ConnectionString": "Data Source=tcp:tarajamdbserver.database.windows.net,1433;Initial Catalog=Tarajam;User Id=faouzi@tarajamdbserver;Password=Tarajam2020"
+    "ConnectionString": "Data Source=tcp:tarajamdbserver.dServer=.\\SQLEXPRESS;Database=Data-translate;Trusted_Connection=True;"
   },
   "DbSeedDbSettings": {
     "DefaultSentencesFile": "Assets/french_data_azure.csv",

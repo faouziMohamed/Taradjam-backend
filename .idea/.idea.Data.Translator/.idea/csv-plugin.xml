@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\km.Translate.Api\Assets\french_data_azure.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

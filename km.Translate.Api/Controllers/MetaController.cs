@@ -18,6 +18,6 @@ public class MetaController : BaseApiController
     var assembly = typeof(WebMarker).Assembly;
     var creationDate = System.IO.File.GetCreationTime(assembly.Location);
     string? version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
-    return Ok($"Version: {version}, Last Updated: {creationDate}");
+    return Ok($"Version: {version}, Last Updated: {creationDate:f}");
   }
 }

@@ -2,11 +2,11 @@ using System.Globalization;
 using System.Reflection;
 using CsvHelper;
 using km.Library.Exceptions;
+using km.Library.Utils;
 using km.Translate.DataLib.Configs.Settings;
 using km.Translate.DataLib.Data;
 using km.Translate.DataLib.Data.Models;
 using km.Translate.DataLib.Repositories.IRepositories;
-using Microsoft.Extensions.Configuration;
 
 namespace km.Translate.DataLib.Repositories;
 
@@ -152,10 +152,9 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
 
   private static DbSeedDbSettings GetFaultSettings()
   {
-    return new ConfigurationBuilder()
-      .AddJsonFile("dataSettings.json")
-      .Build()
-      .GetRequiredSection("DbSeedDbSettings")
-      .Get<DbSeedDbSettings>();
+
+    bool isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+    return Utils.GetConfig<DbSeedDbSettings>(isDevelopment, "dataSettings.json");
+
   }
 }

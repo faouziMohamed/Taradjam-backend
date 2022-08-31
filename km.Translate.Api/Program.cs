@@ -9,12 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+bool isDevelopment = builder.Environment.IsDevelopment();
 
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-var serverDoc = Utils.GetConfig<ServerDocSettings>();
+var serverDoc = Utils.GetConfig<ServerDocSettings>(isDevelopment);
 builder.Services.AddSwaggerGen(options =>
   {
     options.SwaggerDoc(
@@ -43,7 +44,7 @@ builder.Services.AddSwaggerGen(options =>
   }
 );
 
-var serverSettings = Utils.GetConfig<ServerSettings>();
+var serverSettings = Utils.GetConfig<ServerSettings>(isDevelopment);
 builder.Services.AddCors(options =>
   {
     options.AddPolicy(
@@ -59,7 +60,7 @@ builder.Services.AddCors(options =>
   }
 );
 
-var dbConSettings = Utils.GetConfig<DbConnectionSetting>();
+var dbConSettings = Utils.GetConfig<DbConnectionSetting>(isDevelopment);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
   options.UseSqlServer(dbConSettings.ConnectionString,
     b =>
@@ -88,11 +89,7 @@ app.UseSwaggerUI(
 );
 
 app.UseCors(serverSettings.CorsPolicyName);
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

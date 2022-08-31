@@ -21,7 +21,6 @@ public abstract class BaseApiController : ControllerBase
   {
     var exception = new ExceptionBaseDto(title: e.Title, message: e.Message, hint: e.Hint);
     Response.StatusCode = httpCode;
-    var response = Content(content: exception.ToString(), "application/json");
-    return response;
+    return Content(content: exception.ToString(), "application/json");
   }
 }

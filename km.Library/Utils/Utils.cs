@@ -6,7 +6,7 @@ namespace km.Library.Utils;
 
 static public class Utils
 {
-  static public TSettings GetConfig<TSettings>(string configFile = "appsettings.json")
+  static public TSettings GetConfig<TSettings>(string configFile)
   {
     return new ConfigurationBuilder()
       .AddJsonFile(configFile)
@@ -15,6 +15,15 @@ static public class Utils
       .Get<TSettings>();
   }
 
+  static public TSettings GetConfig<TSettings>(bool isDevelopment, string configFile = "appsettings.json")
+  {
+    string file = isDevelopment ?
+      $"{Path.GetFileNameWithoutExtension(configFile)}.Development.json"
+      :
+      configFile;
+
+    return GetConfig<TSettings>(file);
+  }
   /**
    * <summary>
    *   Generate the same id (hash) for the same string of 64 characters
