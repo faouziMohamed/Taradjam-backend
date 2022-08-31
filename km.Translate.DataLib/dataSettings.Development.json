@@ -1,0 +1,54 @@
+{
+  "DbConnectionSetting": {
+    "MaxRetryAttempts": 10,
+    "RetryDelay": 10,
+    "ConnectionString": "Data Source=tcp:tarajamdbserver.database.windows.net,1433;Initial Catalog=Tarajam;User Id=faouzi@tarajamdbserver;Password=Tarajam2020"
+  },
+  "DbSeedDbSettings": {
+    "DefaultSentencesFile": "Assets/french_data_azure.csv",
+    "LocaleShort": "fr",
+    "LocaleLong": "French",
+    "DefaultUsername": "admin",
+    "DefaultEmail": "fuzy@duck.com",
+    "DefaultPassword": "admin",
+    "RoleSettings": [
+      {
+        "Id": 1,
+        "Name": "Moderator",
+        "Description": "Moderator has the same abilities as Basic, but can also add new Sentences and manage users (Add,Edit, Approve, and Delete Users)"
+      },
+      {
+        "Id": 2,
+        "Name": "Basic",
+        "Description": "Basic Role, can Add, Edit, Approve, and Delete Translations;"
+      },
+      {
+        "Id": 3,
+        "Name": "Developer",
+        "Description": "Developer Role, can do everything, programmatically or manually with more power"
+      }
+    ],
+    "LangSettings": [
+      {
+        "Id": 1,
+        "Name": "Français",
+        "ShortName": "fr",
+        "LongName": "French"
+      },
+      {
+        "Id": 2,
+        "Name": "English",
+        "ShortName": "en",
+        "LongName": "English"
+      },
+      {
+        "Id": 3,
+        "Name": "Shi Komori",
+        "ShortName": "km",
+        "LongName": "Comorian"
+      }
+    ],
+    "DefaultRoleId": 1,
+    "DefaultLangId": 1
+  }
+}
