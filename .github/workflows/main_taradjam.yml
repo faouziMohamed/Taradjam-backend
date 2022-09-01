@@ -26,10 +26,10 @@ jobs:
         run: cd km.Translate.Api
         
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build "km.Translate.Api.csproj" --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish "km.Translate.Api.csproj" -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
