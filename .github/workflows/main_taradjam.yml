@@ -22,9 +22,6 @@ jobs:
           dotnet-version: '6.0.x'
           include-prerelease: true
 
-      - name: Changing working directory
-        run: cd km.Translate.Api
-        
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
@@ -56,5 +53,5 @@ jobs:
         with:
           app-name: 'taradjam'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AAC8679C105544F585F61B6CF8BC3CB4 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BB2941B247064699B7151C629255EE41 }}
           package: .
