@@ -53,4 +53,9 @@ static public class Utils
     string shortHash = size > 0 ? longHash[..size] : longHash[^-size..];
     return (shortHash, longHash);
   }
+  static public bool IsAspDevelopment()
+  {
+    return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+
+  }
 }

@@ -1,7 +1,9 @@
 using km.Library.Exceptions;
 using km.Library.GenericDto;
+using km.Translate.DataLib.Commands.Translations;
 using km.Translate.DataLib.Data.Dto;
-using km.Translate.DataLib.Repositories.IRepositories;
+using km.Translate.DataLib.Queries.Translations;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace km.Translate.Api.Controllers;
@@ -9,9 +11,9 @@ namespace km.Translate.Api.Controllers;
 /**
  * <summary>Provide endpoints to perform CRUD operations on the proposed translations</summary>
  */
-public class ProposedController : BaseApiController
+public class ProposedController : BaseResourceApiController
 {
-  public ProposedController(IUnitOfWork unitOfWork) : base(unitOfWork)
+  public ProposedController(IMediator mediator) : base(mediator)
   {
   }
   /**
@@ -25,8 +27,7 @@ public class ProposedController : BaseApiController
   {
     try
     {
-      var proposedTranslations = await _unitOfWork.Propositions.GetProposedTranslations(sentenceId);
-      return proposedTranslations;
+      return await _mediator.Send(new GetProposedTranslationQuery(sentenceId));
     }
     catch (NotFoundException e)
     {
@@ -52,20 +53,13 @@ public class ProposedController : BaseApiController
   {
     try
     {
-      // check if sentence exists and is the proposed translation is not already proposed
-      await _unitOfWork.Propositions.MakeSureSentenceExistsOrThrow(propositionDto.SentenceVoId);
-      await _unitOfWork.Propositions.MakeSureTranslationDoesNotExistOrThrow(propositionDto);
-      var newProposition = await _unitOfWork.Propositions.AddNewProposition(propositionDto);
-      await _unitOfWork.CompleteAsync();
-      return newProposition;
+      var proposition = PostNewPropositionCommand.From(propositionDto);
+      return await _mediator.Send(new InsertPropositionCommand(proposition));
     }
-    catch (NotFoundException e)
+    catch (DataException e) when (e is NotFoundException or AlreadyExistsException)
     {
-      return ExceptionToJsonResponse(e, 404);
-    }
-    catch (AlreadyExistsException e)
-    {
-      return ExceptionToJsonResponse(e, 409);
+      int code = e is NotFoundException ? 404 : 409;
+      return ExceptionToJsonResponse(e, code);
     }
     catch (Exception e)
     {
@@ -85,10 +79,7 @@ public class ProposedController : BaseApiController
   {
     try
     {
-      await _unitOfWork.Propositions.MakeSurePropositionExistOrThrow(propositionDto.PropositionId);
-      var updatedProposition = await _unitOfWork.Propositions.UpdateProposition(propositionDto);
-      await _unitOfWork.CompleteAsync();
-      return updatedProposition;
+      return await _mediator.Send(new UpdatePropositionCommand(PutPropositionCommand.From(propositionDto)));
     }
     catch (NotFoundException e)
     {
@@ -112,36 +103,33 @@ public class ProposedController : BaseApiController
   {
     try
     {
-      await _unitOfWork.Propositions.MakeSurePropositionExistOrThrow(propositionId);
       // making sure that the target is either (up or upvote) or (down or downvote)
-      string vTarget = target.ToLowerInvariant() switch
-      {
-        "up" or "upvote" => "up",
-        "down" or "downvote" => "down",
-        _ => throw new InvalidTargetException(
-          message: $"'{target}' is not expected as a target for a vote. Expected 'up' or 'down'",
-          hint: "Target must be ('up', 'upvote') for an upvote or ('down', 'downvote') for a downVote",
-          title: "Invalid target"
-        )
-
-      };
-
-      long votes = await _unitOfWork.Propositions.DoAVote(propositionId, isUpVote: vTarget == "up");
-      var votedDto = new ReturnedVotesDto { votes = votes };
-      return Ok(votedDto);
+      string vTarget = ValidateTargetParamQuery(target);
+      var voted = await _mediator.Send(new UpdateVotePropositionCommand(propositionId, IsUpVote: vTarget == "up"));
+      return Ok(voted);
     }
-    catch (NotFoundException e)
+    catch (DataException e) when (e is NotFoundException or InvalidTargetException)
     {
-      return ExceptionToJsonResponse(e, 404);
-    }
-    catch (InvalidTargetException e)
-    {
-      return ExceptionToJsonResponse(e, 400);
+      int code = e is NotFoundException ? 404 : 400;
+      return ExceptionToJsonResponse(e, code);
     }
     catch (Exception e)
     {
       Console.WriteLine(e);
       throw;
     }
+  }
+  private static string ValidateTargetParamQuery(string target)
+  {
+    return target.ToLowerInvariant() switch
+    {
+      "up" or "upvote" => "up",
+      "down" or "downvote" => "down",
+      _ => throw new InvalidTargetException(
+        message: $"'{target}' is not expected as a target for a vote. Expected 'up' or 'down'",
+        hint: "Target must be ('up', 'upvote') for an upvote or ('down', 'downvote') for a downVote",
+        title: "Invalid target"
+      )
+    };
   }
 }

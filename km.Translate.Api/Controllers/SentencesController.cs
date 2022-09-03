@@ -1,8 +1,7 @@
-﻿using System.Linq.Expressions;
-using km.Library.GenericDto;
+﻿using km.Library.GenericDto;
 using km.Translate.DataLib.Data.Dto;
-using km.Translate.DataLib.Data.Models;
-using km.Translate.DataLib.Repositories.IRepositories;
+using km.Translate.DataLib.Queries.Sentences;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace km.Translate.Api.Controllers;
@@ -10,10 +9,10 @@ namespace km.Translate.Api.Controllers;
 /**
  * <summary>Manage original sentences with CRUD operations</summary>
  */
-public class SentencesController : BaseApiController
+public class SentencesController : BaseResourceApiController
 {
   // public record TranslationsDto : ResponseWithPageDto<Sentence>;
-  public SentencesController(IUnitOfWork unitOfWork) : base(unitOfWork)
+  public SentencesController(IMediator mediator) : base(mediator)
   {
   }
   /**
@@ -21,22 +20,12 @@ public class SentencesController : BaseApiController
  */
   [HttpGet]
   [Produces("application/json")]
-  public async Task<ActionResult> GetSentences([FromQuery] RequestWithLocalDto dto)
+  public async Task<ActionResult> GetSentences([FromQuery] RequestWithLocalDto dto, CancellationToken cancellationToken)
   {
     try
     {
-      int pageNumber = dto.PageNumber ?? 0;
-      int pageSize = dto.PageSize ?? 10;
-      bool shuffle = dto.Shuffle ?? false;
-      string? lang = dto.Lang;
-      Expression<Func<Sentence, bool>> filter = s => s.LanguageVo.ShortName == lang;
-
-      ResponseWithPageDto<SentenceDto> sentencesDto = lang switch
-      {
-        null => await _unitOfWork.Sentences.GetManyByPage(pageNumber, pageSize, shuffle),
-        _ => await _unitOfWork.Sentences.GetManyByPage(pageNumber, pageSize, shuffle, filter)
-      };
-
+      var query = new GetAllSentencesQuery(RequestWithLocalQuery.From(dto));
+      ResponseWithPageDto<SentenceDto> sentencesDto = await _mediator.Send(query, cancellationToken);
       return sentencesDto.CurrentPageSize == 0 ? Problem("No sentences found", title: "No sentences found", statusCode: 404) : Ok(sentencesDto);
     }
     catch (Exception e)
@@ -54,15 +43,8 @@ public class SentencesController : BaseApiController
   {
     try
     {
-      var sentence = await _unitOfWork.Sentences.GetOneByIdAsync(id);
-
-      if (sentence == null)
-      {
-        return NotFound();
-      }
-
-      var sentenceDto = SentenceDto.From(sentence);
-      return sentenceDto;
+      var sentenceDto = await _mediator.Send(new GetSentenceByIdQuery(id));
+      return sentenceDto == null ? NotFound() : sentenceDto;
     }
     catch (Exception e)
     {

@@ -1,5 +1,7 @@
 using km.Library.Exceptions;
-using km.Translate.DataLib.Repositories.IRepositories;
+using km.Translate.DataLib.Commands;
+using km.Translate.DataLib.Queries.Sentences;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace km.Translate.Api.Controllers;
@@ -7,39 +9,37 @@ namespace km.Translate.Api.Controllers;
 /**
  * <summary>Provide endpoints to control the creation, reinitialization of the database or credentials</summary>
  */
-public class StarterController : BaseApiController
+public class StarterController : BaseResourceApiController
 {
-  public StarterController(IUnitOfWork unitOfWork) : base(unitOfWork)
+  public StarterController(IMediator mediator) : base(mediator)
   {
 
   }
   /**
    * <summary>Create the database or recreate it if it already created</summary>
-   * <param name="force">
-   *   Set this query to true to recreate the database. This will delete all data in the database and recreate it with seed
-   *   data. <br />
-   *   Set this query to false to create the database. This will create the database if it does not
-   *   already exist.
-   *   If set to true it will require to pass an api token <see cref="token" />
-   * </param>
-   * <param name="token">Credential Token required to recreate the database</param>
+   * <param name="resetToken">Credential Token required to recreate the database</param>
    * <returns>The result an acknowledge message of the operation</returns>
    */
   [HttpGet("initialize")]
-  public async Task<IActionResult> Initialize(bool force = false, string token = "")
+  public async Task<IActionResult> Initialize(string resetToken)
   {
     try
     {
-      await (
-        force ?
-          // Empty the tables and repopulate with seed data
-          ReinitializeDatabaseAsync() :
-          // Fill the tables with seed data assuming they are empty
-          InitializeDatabaseAsync()
-      );
+      bool sentenceTableEmpty = await _mediator.Send(new IsSentenceTableEmptyQuery());
 
-      await _unitOfWork.CompleteAsync();
+      if (!sentenceTableEmpty)
+      {
+        throw new AlreadyCreatedException(
+          title: "Database already initialized",
+          hint: "Use the query params '?force=true&resetToken=<your-reset-token>' to reinitialize the database",
+          message:
+          "The database has already been initialized, " +
+          "if you want to re-initialize the database, " +
+          "please delete the database recreate it by hitting the endpoint with the query '?force=true&resetToken=<your-reset-token>'"
+        );
+      }
 
+      await _mediator.Send(new InitializeDatabaseCommand(resetToken));
       return Ok("Database initialized");
     }
     catch (AlreadyCreatedException e)
@@ -51,28 +51,5 @@ public class StarterController : BaseApiController
       Console.WriteLine(e);
       throw;
     }
-  }
-  private async Task ReinitializeDatabaseAsync()
-  {
-
-    await _unitOfWork.DatabaseInitializer.ReinitializeDatabaseAsync();
-  }
-  private async Task InitializeDatabaseAsync()
-  {
-    int sentencesRowCount = await _unitOfWork.Sentences.CountAsync();
-
-    if (sentencesRowCount != 0)
-    {
-      throw new AlreadyCreatedException(
-        title: "Database already initialized",
-        hint: "Use the query params '?force=true&resetToken=<your-reset-token>' to reinitialize the database",
-        message:
-        "The database has already been initialized, " +
-        "if you want to re-initialize the database, " +
-        "please delete the database recreate it by hitting the endpoint with the query '?force=true&resetToken=<your-reset-token>'"
-      );
-    }
-
-    await _unitOfWork.DatabaseInitializer.InitializeDatabaseAsync();
   }
 }
