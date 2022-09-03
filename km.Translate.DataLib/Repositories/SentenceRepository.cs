@@ -32,18 +32,14 @@ public sealed class SentenceRepository : GenericRepository<Sentence, Application
     Expression<Func<Sentence, bool>>? filterPredicate = null)
   {
     Expression<Func<Sentence, object>>[] innerJoins = GetPropertiesToJoinsExpressions();
-    ResponseWithPageDto<Sentence> response = await GetManyAsync(static s => s.Id,
+    ResponseWithPageDto<Sentence> response = await GetManyAsync(
+      static s => s.Id,
       filterPredicate: filterPredicate!,
       pageNumber,
       pageSize,
       shuffle,
       innerJoins
     );
-
-    List<Sentence> data = response.Data.ToList();
-    var r = SentenceDto.From(data[0]);
-
-    Console.WriteLine(r);
 
     return response.Map(static s => SentenceDto.From(s));
   }

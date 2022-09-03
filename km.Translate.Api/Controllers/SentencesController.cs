@@ -26,7 +26,9 @@ public class SentencesController : BaseResourceApiController
     {
       var query = new GetAllSentencesQuery(RequestWithLocalQuery.From(dto));
       ResponseWithPageDto<SentenceDto> sentencesDto = await _mediator.Send(query, cancellationToken);
-      return sentencesDto.CurrentPageSize == 0 ? Problem("No sentences found", title: "No sentences found", statusCode: 404) : Ok(sentencesDto);
+      return sentencesDto.CurrentPageSize == 0 ?
+        Problem("No sentences were found for this query", title: "No sentences found", statusCode: 404)
+        : Ok(sentencesDto);
     }
     catch (Exception e)
     {
