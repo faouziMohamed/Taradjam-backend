@@ -3,7 +3,6 @@
 using System.ComponentModel.DataAnnotations;
 using km.Translate.DataLib.Data.Models;
 
-// ReSharper disable MemberCanBeProtected.Global
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
@@ -49,9 +48,9 @@ public abstract class AbstractBasePropositionDto : AbstractBasePropositionDtoWit
   public int PropositionId { get; init; }
 }
 
-public class PropositionsDto : AbstractBasePropositionDto
+public sealed class PropositionsDto : AbstractBasePropositionDto
 {
-  protected PropositionsDto(Proposition p)
+  private PropositionsDto(Proposition p)
   {
     PropositionId = p.Id;
     SentenceVoId = p.SentenceVoId;
@@ -87,7 +86,22 @@ public class PostNewPropositionDto : AbstractBasePropositionDtoWithoutId
   public DateTime TranslationDate { get; init; }
 }
 
-public sealed class PutPropositionDto : AbstractBasePropositionDto
+public sealed class PostNewPropositionCommand : PostNewPropositionDto
+{
+  static public PostNewPropositionCommand From(PostNewPropositionDto dto)
+  {
+    return new PostNewPropositionCommand
+    {
+      SentenceVoId = dto.SentenceVoId,
+      TranslationLangId = dto.TranslationLangId,
+      TranslatedText = dto.TranslatedText,
+      TranslatedBy = dto.TranslatedBy,
+      TranslationDate = dto.TranslationDate
+    };
+  }
+}
+
+public class PutPropositionDto : AbstractBasePropositionDto
 {
   public long Votes { get; init; }
   public int ApprovedById { get; init; }
@@ -95,4 +109,22 @@ public sealed class PutPropositionDto : AbstractBasePropositionDto
 
   [Required]
   public DateTime TranslationDate { get; init; }
+}
+
+public sealed class PutPropositionCommand : PutPropositionDto
+{
+  static public PutPropositionCommand From(PutPropositionDto dto)
+  {
+    return new PutPropositionCommand
+    {
+      PropositionId = dto.PropositionId,
+      SentenceVoId = dto.SentenceVoId,
+      TranslationLangId = dto.TranslationLangId,
+      TranslatedText = dto.TranslatedText,
+      Votes = dto.Votes,
+      ApprovedById = dto.ApprovedById,
+      TranslatedBy = dto.TranslatedBy,
+      TranslationDate = dto.TranslationDate
+    };
+  }
 }

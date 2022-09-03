@@ -6,7 +6,7 @@ namespace km.Library.GenericDto;
 
 public record RequestBaseDto
 {
-  public int? PageNumber { get; init; }
+  public int? Page { get; init; }
 
   public int? PageSize { get; init; }
   public bool? Shuffle { get; init; }

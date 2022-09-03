@@ -152,9 +152,7 @@ internal sealed class DatabaseInitializer : IDatabaseInitializer
 
   private static DbSeedDbSettings GetFaultSettings()
   {
-
-    bool isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+    bool isDevelopment = Utils.IsAspDevelopment();
     return Utils.GetConfig<DbSeedDbSettings>(isDevelopment, "dataSettings.json");
-
   }
 }

@@ -1,6 +1,6 @@
 using km.Library.Exceptions;
 using km.Library.GenericDto;
-using km.Translate.DataLib.Repositories.IRepositories;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 // ReSharper disable InconsistentNaming
@@ -11,16 +11,21 @@ namespace km.Translate.Api.Controllers;
 [ApiController]
 public abstract class BaseApiController : ControllerBase
 {
-  protected readonly IUnitOfWork _unitOfWork;
 
-  protected BaseApiController(IUnitOfWork unitOfWork)
-  {
-    _unitOfWork = unitOfWork;
-  }
   protected ContentResult ExceptionToJsonResponse(DataException e, int httpCode)
   {
     var exception = new ExceptionBaseDto(title: e.Title, message: e.Message, hint: e.Hint);
     Response.StatusCode = httpCode;
     return Content(content: exception.ToString(), "application/json");
+  }
+}
+
+public abstract class BaseResourceApiController : BaseApiController
+{
+  protected readonly IMediator _mediator;
+
+  protected BaseResourceApiController(IMediator mediator)
+  {
+    _mediator = mediator;
   }
 }

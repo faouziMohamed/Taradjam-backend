@@ -1,14 +1,10 @@
 using System.Diagnostics;
-using km.Translate.DataLib.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace km.Translate.Api.Controllers;
 
 public class MetaController : BaseApiController
 {
-  public MetaController(IUnitOfWork unitOfWork) : base(unitOfWork)
-  {
-  }
   /// <summary>
   ///   Give some information about the server
   /// </summary>

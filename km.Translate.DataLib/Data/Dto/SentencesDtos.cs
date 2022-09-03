@@ -25,7 +25,7 @@ public sealed record SentenceDto
   public string SentenceVo { get; init; } = string.Empty;
   public LanguageDto SrcLanguage { get; init; } = null!;
 
-  static public SentenceDto From(Sentence sentence)
+  static public SentenceDto? From(Sentence sentence)
   {
     return new SentenceDto(sentence);
   }
