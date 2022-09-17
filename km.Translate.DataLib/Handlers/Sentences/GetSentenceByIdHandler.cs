@@ -7,12 +7,17 @@ using MediatR;
 
 namespace km.Translate.DataLib.Handlers.Sentences;
 
-public class GetSentenceByIdHandler : IRequestHandler<GetSentenceByIdQuery, SentenceDto?>
+public sealed class GetSentenceByIdHandler : IRequestHandler<GetSentenceByIdQuery, SentenceDto?>
 {
   private readonly ISentenceRepository _sentenceRepository;
   public GetSentenceByIdHandler(ApplicationDbContext context)
   {
     _sentenceRepository = new SentenceRepository(context);
+  }
+
+  public GetSentenceByIdHandler(ISentenceRepository sentenceRepository)
+  {
+    _sentenceRepository = sentenceRepository;
   }
   public async Task<SentenceDto?> Handle(GetSentenceByIdQuery request, CancellationToken cancellationToken)
   {

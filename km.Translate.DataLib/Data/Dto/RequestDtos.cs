@@ -20,4 +20,9 @@ public sealed record RequestWithLocalQuery : RequestWithLocalDto
     };
 
   }
+  // create a deconstruct method
+  public void Deconstruct(out int page, out int pageSize, out bool shuffle, out string? lang)
+  {
+    (page, pageSize, shuffle, lang) = (Page ?? 0, PageSize ?? 10, Shuffle ?? false, Lang);
+  }
 }

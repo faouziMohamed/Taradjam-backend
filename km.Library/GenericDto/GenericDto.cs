@@ -19,7 +19,6 @@ public sealed record ResponseWithPageDto<TData>
   public long CurrentPageSize { get; init; }
   public long TotalPageCount { get; init; }
   public long CurrentPage { get; init; }
-  public long TotalRecordCount { get; init; }
 
   public ResponseWithPageDto<TNewFormat> Map<TNewFormat>(Func<TData, TNewFormat> map)
   {
@@ -29,8 +28,7 @@ public sealed record ResponseWithPageDto<TData>
       NextPage = NextPage,
       CurrentPageSize = CurrentPageSize,
       TotalPageCount = TotalPageCount,
-      CurrentPage = CurrentPage,
-      TotalRecordCount = TotalRecordCount
+      CurrentPage = CurrentPage
     };
   }
 }

@@ -20,11 +20,11 @@ public class SentencesController : BaseResourceApiController
  */
   [HttpGet]
   [Produces("application/json")]
-  public async Task<ActionResult> GetSentences([FromQuery] RequestWithLocalDto dto, CancellationToken cancellationToken)
+  public async Task<ActionResult> GetSentencesByPage([FromQuery] RequestWithLocalDto dto, CancellationToken cancellationToken)
   {
     try
     {
-      var query = new GetAllSentencesQuery(RequestWithLocalQuery.From(dto));
+      var query = new GetSentencesByPagesQuery(RequestWithLocalQuery.From(dto));
       ResponseWithPageDto<SentenceDto> sentencesDto = await _mediator.Send(query, cancellationToken);
       return sentencesDto.CurrentPageSize == 0 ?
         Problem("No sentences were found for this query", title: "No sentences found", statusCode: 404)
@@ -41,7 +41,7 @@ public class SentencesController : BaseResourceApiController
    * <summary>Get a specific sentence by providing its id</summary>
    */
   [HttpGet("{id:int}")]
-  public async Task<ActionResult<SentenceDto>> GetSentence(int id)
+  public async Task<ActionResult<SentenceDto>> GetSentenceById(int id)
   {
     try
     {

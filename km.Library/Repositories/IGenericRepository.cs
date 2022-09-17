@@ -43,4 +43,5 @@ public interface IGenericRepository<TEntity> where TEntity : BaseEntity
   public void RemoveRange(IEnumerable<TEntity> entities);
   public void Update(TEntity entity);
   public void UpdateRange(IEnumerable<TEntity> entities);
+  public Task<ResponseWithPageDto<TData>> CreateResponseWithPageInfoDto<TData>(IList<TData> data, int currentPage, int pageSize);
 }

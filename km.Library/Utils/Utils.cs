@@ -58,4 +58,12 @@ static public class Utils
     return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
 
   }
+
+  static public long GetTotalPageCount(long totalCount, int pageSize)
+  {
+    long totalPageCount = totalCount/pageSize; // total page count
+    // Make sure we don't have a remainder
+    if (totalCount%pageSize == 0) return totalPageCount;
+    return totalPageCount + 1;
+  }
 }

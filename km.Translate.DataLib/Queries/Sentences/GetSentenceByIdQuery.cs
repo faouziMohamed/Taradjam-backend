@@ -3,4 +3,4 @@ using MediatR;
 
 namespace km.Translate.DataLib.Queries.Sentences;
 
-public record GetSentenceByIdQuery(int SentenceId) : IRequest<SentenceDto?>;
+public sealed record GetSentenceByIdQuery(int SentenceId) : IRequest<SentenceDto?>;

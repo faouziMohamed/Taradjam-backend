@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3FDA2225-11A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "km.Translate.DataLib", "km.Translate.DataLib\km.Translate.DataLib.csproj", "{32AD4674-036B-41E8-900C-20790639BED6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "km.Translate.UnitTests", "km.Translate.UnitTests\km.Translate.UnitTests.csproj", "{50992595-3DCB-43F4-9AC6-AC904120345F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{17C96590-1AEA-48FA-A1DB-377918F391CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +33,10 @@ Global
 		{32AD4674-036B-41E8-900C-20790639BED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32AD4674-036B-41E8-900C-20790639BED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32AD4674-036B-41E8-900C-20790639BED6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50992595-3DCB-43F4-9AC6-AC904120345F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50992595-3DCB-43F4-9AC6-AC904120345F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50992595-3DCB-43F4-9AC6-AC904120345F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50992595-3DCB-43F4-9AC6-AC904120345F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,5 +48,6 @@ Global
 		{7E0BD1CB-86D2-4BC8-9C58-300911692E72} = {3FDA2225-11A6-4A40-90E6-498E97303C16}
 		{FB96EF3F-79FE-46B3-AE37-D80B3E86651F} = {3FDA2225-11A6-4A40-90E6-498E97303C16}
 		{32AD4674-036B-41E8-900C-20790639BED6} = {3FDA2225-11A6-4A40-90E6-498E97303C16}
+		{50992595-3DCB-43F4-9AC6-AC904120345F} = {17C96590-1AEA-48FA-A1DB-377918F391CA}
 	EndGlobalSection
 EndGlobal

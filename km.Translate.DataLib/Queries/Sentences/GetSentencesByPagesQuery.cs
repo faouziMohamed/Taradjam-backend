@@ -4,4 +4,4 @@ using MediatR;
 
 namespace km.Translate.DataLib.Queries.Sentences;
 
-public record GetAllSentencesQuery(RequestWithLocalQuery Queries) : IRequest<ResponseWithPageDto<SentenceDto>>;
+public sealed record GetSentencesByPagesQuery(RequestWithLocalQuery Queries) : IRequest<ResponseWithPageDto<SentenceDto>>;

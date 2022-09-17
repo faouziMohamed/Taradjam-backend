@@ -25,8 +25,7 @@ public sealed class SentenceRepository : GenericRepository<Sentence, Application
     return sentence;
   }
 
-  public async Task<ResponseWithPageDto<SentenceDto>> GetManyByPage(
-    int pageNumber,
+  public async Task<ResponseWithPageDto<SentenceDto>> GetManyByPage(int page,
     int pageSize,
     bool shuffle = false,
     Expression<Func<Sentence, bool>>? filterPredicate = null)
@@ -35,13 +34,13 @@ public sealed class SentenceRepository : GenericRepository<Sentence, Application
     ResponseWithPageDto<Sentence> response = await GetManyAsync(
       static s => s.Id,
       filterPredicate: filterPredicate!,
-      pageNumber,
+      page,
       pageSize,
       shuffle,
       innerJoins
     );
 
-    return response.Map(static s => SentenceDto.From(s));
+    return response.Map(static s => SentenceDto.From(s))!;
   }
 
   public override Expression<Func<Sentence, object>>[] GetPropertiesToJoinsExpressions()

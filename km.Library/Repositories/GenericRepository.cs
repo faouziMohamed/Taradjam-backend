@@ -133,6 +133,22 @@ public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
     return await _context.Set<TEntity>().AnyAsync(predicate);
   }
 
+  public async Task<ResponseWithPageDto<TData>> CreateResponseWithPageInfoDto<TData>(IList<TData> data, int currentPage, int pageSize)
+  {
+    int rowsCount = await CountAsync();
+    long totalPageCount = Utils.Utils.GetTotalPageCount(rowsCount, pageSize);
+    var response = new ResponseWithPageDto<TData>
+    {
+      CurrentPageSize = data.Count,
+      Data = data,
+      NextPage = currentPage + 1,
+      CurrentPage = currentPage,
+      TotalPageCount = totalPageCount
+    };
+
+    return response;
+  }
+
   private IQueryable<TEntity> GetManyWithFilter(Expression<Func<TEntity, object>> orderByPredicate,
     Expression<Func<TEntity, bool>>? filterPredicate,
     int pageNumber = 0, int pageSize = 10, bool shuffle = false)
@@ -145,25 +161,6 @@ public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
 
     IQueryable<TEntity> result = rows.Skip(skip).Take(pageSize);
     return result;
-  }
-
-  protected async Task<ResponseWithPageDto<TData>> CreateResponseWithPageInfoDto<TData>(IList<TData> data, int currentPage, int pageSize)
-  {
-    int rowsCount = await CountAsync();
-    long totalPageCount = GetTotalPageCount(rowsCount, pageSize);
-
-    var response = new ResponseWithPageDto<TData>
-    {
-      CurrentPageSize = data.Count,
-      Data = data,
-      NextPage = currentPage + 1,
-      CurrentPage = currentPage,
-      TotalPageCount = totalPageCount,
-      TotalRecordCount = rowsCount
-
-    };
-
-    return response;
   }
 
   static public long GetTotalPageCount(long totalCount, int pageSize)
