@@ -12,12 +12,12 @@ namespace km.Translate.DataLib.Data.Dto;
 
 public sealed class TranslationsDto
 {
-  private TranslationsDto(Sentence sentence)
-  {
-    SentenceVoId = sentence.Id;
-    ICollection<Proposition>? propositions = sentence.Propositions;
-    Propositions = propositions.Select(PropositionsDto.From).ToList();
-  }
+  // public TranslationsDto(Sentence sentence)
+  // {
+  //   SentenceVoId = sentence.Id;
+  //   List<Proposition>? propositions = sentence.Propositions;
+  //   Propositions = propositions.Select(PropositionsDto.From).ToList();
+  // }
 
   [Required]
   public long SentenceVoId { get; init; }
@@ -26,7 +26,11 @@ public sealed class TranslationsDto
 
   static public TranslationsDto From(Sentence sentence)
   {
-    return new TranslationsDto(sentence);
+    return new TranslationsDto
+    {
+      SentenceVoId = sentence.Id,
+      Propositions = sentence.Propositions.Select(PropositionsDto.From).ToList()
+    };
   }
 }
 

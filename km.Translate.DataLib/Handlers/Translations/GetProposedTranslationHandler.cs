@@ -14,9 +14,14 @@ public class GetProposedTranslationHandler : IRequestHandler<GetProposedTranslat
   {
     _propositionRepository = new PropositionRepository(context);
   }
+  public GetProposedTranslationHandler(IPropositionRepository propositionRepository)
+  {
+    _propositionRepository = propositionRepository;
+  }
   public async Task<TranslationsDto> Handle(GetProposedTranslationQuery request, CancellationToken cancellationToken)
   {
-    return await _propositionRepository
-      .GetProposedTranslations(request.SentenceId);
+    var result = await _propositionRepository.GetProposedTranslations(request.SentenceId);
+
+    return result;
   }
 }

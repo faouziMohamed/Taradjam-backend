@@ -120,7 +120,7 @@ public sealed class PropositionRepository : GenericRepository<Proposition, Appli
     // proposition exists if it the same sentenceVo, langId and hash
     int sentenceId = proposition.SentenceVoId;
     int langId = proposition.TranslationLangId;
-    string hash = GenerateHash(proposition.TranslatedText);
+    string hash = proposition.TranslatedText.GenerateHash();
     return await ExistsAsync(
       p =>
         p.SentenceVoId == sentenceId &&
@@ -131,7 +131,7 @@ public sealed class PropositionRepository : GenericRepository<Proposition, Appli
   private void UpdateProposition(PutPropositionDto propositionDto, Proposition proposition)
   {
     proposition.TranslationLangId = propositionDto.TranslationLangId;
-    proposition.TranslationHash = GenerateHash(propositionDto.TranslatedText);
+    proposition.TranslationHash = propositionDto.TranslatedText.GenerateHash();
     proposition.TranslatedText = propositionDto.TranslatedText.Trim();
     proposition.TranslationDate = propositionDto.TranslationDate;
     proposition.TranslatedBy = propositionDto.TranslatedBy ?? "Anonymous";
@@ -186,15 +186,11 @@ public sealed class PropositionRepository : GenericRepository<Proposition, Appli
       SentenceVoId = proposition.SentenceVoId,
       TranslationLangId = proposition.TranslationLangId,
       TranslatedText = proposition.TranslatedText.Trim(),
-      TranslationHash = GenerateHash(proposition.TranslatedText),
+      TranslationHash = proposition.TranslatedText.GenerateHash(),
       TranslationDate = proposition.TranslationDate,
       TranslatedBy = proposition.TranslatedBy.Trim(),
       Votes = 0
     };
-  }
-  private static string GenerateHash(string text)
-  {
-    return text.Trim().GenerateUniqueId().LongHash;
   }
 
   public async Task<ResponseWithPageDto<Proposition>> GetManyByPage(int pageNumber, int pageSize = 10, bool shuffle = false,

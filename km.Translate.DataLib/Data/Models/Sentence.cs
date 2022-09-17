@@ -19,5 +19,5 @@ public sealed class Sentence : BaseEntity
   [Required]
   public Language LanguageVo { get; set; }
 
-  public ICollection<Proposition> Propositions { get; set; }
+  public List<Proposition> Propositions { get; set; }
 }

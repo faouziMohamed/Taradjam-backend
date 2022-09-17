@@ -53,6 +53,10 @@ static public class Utils
     string shortHash = size > 0 ? longHash[..size] : longHash[^-size..];
     return (shortHash, longHash);
   }
+  static public string GenerateHash(this string text)
+  {
+    return text.Trim().GenerateUniqueId().LongHash;
+  }
   static public bool IsAspDevelopment()
   {
     return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";

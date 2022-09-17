@@ -3,25 +3,22 @@ using km.Translate.DataLib.Data.Dto;
 using km.Translate.DataLib.Handlers.Sentences;
 using km.Translate.DataLib.Queries.Sentences;
 using km.Translate.DataLib.Repositories.IRepositories;
-using km.Translate.UnitTests.Mocks;
 using Moq;
 using Shouldly;
-
-// ReSharper disable RedundantArgumentDefaultValue
+using MockRepository = km.Translate.UnitTests.Mocks.MockRepository;
 
 namespace km.Translate.UnitTests.Sentences.Queries;
 
 public sealed class GetSentencesByPageHandlerTests
 {
 
-  // Arrange
   private readonly Mock<ISentenceRepository> _sentenceRepository = new();
 
   [Fact]
   public async Task GetSentencesByPage_Return_TheCorrectAmountOfSentences()
   {
     // Arrange
-    const int pageSize = 3, page = 0;
+    const int pageSize = 6, page = 0;
     const bool shuffle = false;
     const string lang = "fr";
 
@@ -29,9 +26,9 @@ public sealed class GetSentencesByPageHandlerTests
     {
       NextPage = page + 1,
       CurrentPage = page,
-      TotalPageCount = MockSentencesRepository.GetTotalPageCount(pageSize),
+      TotalPageCount = MockRepository.GetSentencesTotalPageCount(pageSize),
       CurrentPageSize = pageSize,
-      Data = MockSentencesRepository.GetSentenceDtos(pageSize)
+      Data = MockRepository.GetSentenceDtos(pageSize)
     };
 
     _sentenceRepository
